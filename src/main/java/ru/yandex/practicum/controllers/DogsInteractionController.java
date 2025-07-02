@@ -54,7 +54,7 @@ public class DogsInteractionController {
     }
 
     private void checkHappiness() {
-        if (happiness > 10) {
+        if (happiness >= 10) {
             throw new HappinessOverflowException(happiness);
         }
     }
