@@ -1,11 +1,10 @@
 package ru.yandex.practicum.controllers;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.exceptions.IncorrectCountException;
+import ru.yandex.practicum.responses.ErrorResponse;
 
 import java.util.Map;
 
@@ -38,17 +37,17 @@ public class CatsInteractionController {
         return Map.of("happiness", happiness);
     }
 
-    @ExceptionHandler
-    public Map<String, String> handleIncorrectCount(final IncorrectCountException e) {
-        return Map.of(
-                "error", "Ошибка с параметром count.",
-                "errorMessage", e.getMessage()
-        );
+    @GetMapping("/feed")
+    public Map<String, Integer> feed() {
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,
+                "Метод /feed ещё не реализован.");
     }
 
-    // добавьте сюда метод handleError по обработке RuntimeException
     @ExceptionHandler
-    public Map<String, String> handleRuntimeError(final RuntimeException e) {
-        return Map.of("error", "Произошла ошибка!");
+    public ErrorResponse handleIncorrectCount(final IncorrectCountException e) {
+        return new ErrorResponse(
+                "Ошибка с параметром count.",
+                e.getMessage()
+        );
     }
 }

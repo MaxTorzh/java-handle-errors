@@ -1,8 +1,10 @@
 package ru.yandex.practicum.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.exceptions.HappinessOverflowException;
 import ru.yandex.practicum.exceptions.IncorrectCountException;
+import ru.yandex.practicum.responses.ErrorResponse;
 
 import java.util.Map;
 
@@ -37,20 +39,18 @@ public class DogsInteractionController {
     }
 
     @ExceptionHandler
-    public Map<String, String> handleIncorrectCount(final IncorrectCountException e) {
-        return Map.of(
-                "error", "Ошибка с параметром count.",
-                "errorMessage", e.getMessage()
-
-        );
+    public ErrorResponse handleIncorrectCount(final IncorrectCountException e) {
+        return new ErrorResponse(
+                "Ошибка с параметром count.",
+                e.getMessage());
     }
 
     @ExceptionHandler
-    public Map<String, String> handleHappinessOverflow(final HappinessOverflowException e) {
-        return Map.of(
-                "error", "Осторожно, вы так избалуете пёсика!",
-                "happinessLevel", String.valueOf(e.getHappinessLevel())
-        );
+    public ErrorResponse handleHappinessOverflow(final HappinessOverflowException e) {
+        return new ErrorResponse(
+                "Слишком большое значение [happiness]",
+                "Осторожно, вы так избалуете пёсика! Уровень happiness: " + e.getHappinessLevel());
+
     }
 
     private void checkHappiness() {
